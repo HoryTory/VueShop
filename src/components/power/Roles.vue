@@ -23,6 +23,7 @@
                 >
                 <i class="el-icon-caret-right"></i>
               </el-col>
+              <!-- 二级和三级权限 -->
               <el-col :span="19">
                 <!-- 二级权限 -->
                 <el-row
@@ -94,7 +95,7 @@
         <el-form
           :model="formData"
           ref="formDataRef"
-          label-width="70px"
+          label-width="80px"
           :rules="formDataRules"
         >
           <el-form-item label="角色名称" prop="roleName">
@@ -150,7 +151,12 @@ export default {
         roleDesc: ""
       },
       formDataRules: {
-        roleName: [{ require: true, message: "请输入角色名", trigger: "blur" }]
+        roleName: [
+          { required: true, message: "请输入角色名", trigger: "blur" }
+        ],
+        roleDesc: [
+          { required: true, message: "请输入角色描述", trigger: "blur" }
+        ]
       },
       // 所有权限
       rightsLst: [],
@@ -293,11 +299,12 @@ export default {
         ...this.$refs.treeRef.getHalfCheckedKeys()
       ].join(",");
       console.log(checkedKeys);
-      const {
-        data: res
-      } = await this.$axios.post(`roles/${this.roleId}/rights`, {
-        rids: checkedKeys
-      });
+      const { data: res } = await this.$axios.post(
+        `roles/${this.roleId}/rights`,
+        {
+          rids: checkedKeys
+        }
+      );
       if (res.meta.status !== 200) {
         return this.$message.error("分配权限失败!");
       }

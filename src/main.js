@@ -6,6 +6,14 @@ import router from "./router";
 import "!style-loader!css-loader!less-loader!./assets/less/global.less";
 // 导入字体图标
 import "./assets/fonts/iconfont.css";
+import treetable from "vue-table-with-tree-grid";
+
+import VueQuillEditor from "vue-quill-editor";
+// require styles
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+
 import {
   Button,
   Form,
@@ -39,9 +47,27 @@ import {
   Tag,
   Tree,
   Select,
-  Option
+  Option,
+  Cascader,
+  Alert,
+  Step,
+  Steps,
+  Tabs,
+  TabPane,
+  CheckboxGroup,
+  Checkbox,
+  Upload
 } from "element-ui";
 
+Vue.use(Upload);
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+Vue.use(Tabs);
+Vue.use(TabPane);
+Vue.use(Step);
+Vue.use(Steps);
+Vue.use(Alert);
+Vue.use(Cascader);
 Vue.use(Dialog);
 Vue.use(Pagination);
 Vue.use(Tooltip);
@@ -73,6 +99,7 @@ Vue.use(Tag);
 Vue.use(Tree);
 Vue.use(Option);
 Vue.use(Select);
+Vue.use(VueQuillEditor);
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = MessageBox.confirm;
 
@@ -94,6 +121,8 @@ Vue.directive("focus", {
     el.focus();
   }
 });
+
+Vue.component("tree-table", treetable);
 
 Vue.filter("dateFormat", function(originVal) {
   const dt = new Date(originVal);
