@@ -132,7 +132,8 @@ export default {
         goods_cat: [],
         //图片上传成功后返回的临时路径组成的数组
         pics: [],
-        goods_introduce: ""
+        goods_introduce: "",
+        attrs: []
       },
       addFormRules: {
         goods_name: [
@@ -243,7 +244,46 @@ export default {
       this.addForm.pics.push(picInfo);
       console.log(this.addForm);
     },
-    add() {}
+    add() {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) {
+          return this.$message.error("请填写必要的表单项！");
+        }
+        console.log(this.addForm);
+
+        // 需要深拷贝，不然会与级联选择冲突
+        const form = JSON.stringify(this.addForm);
+        const formRes = JSON.parse(form);
+        formRes.goods_cat = formRes.goods_cat.join(",");
+        // console.log(formRes);
+
+        // 处理动态参数
+        this.manyTableData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_value: item.attr_vals.join(" ")
+          };
+          this.addForm.attrs.push(newInfo);
+        });
+        // 处理静态属性
+        this.onlyTableData.forEach(item => {
+          const newInfo = { attr_id: item.attr_id, attr_value: item.attr_vals };
+          this.addForm.attrs.push(newInfo);
+        });
+        console.log(this.addForm.attrs);
+        formRes.attrs = this.addForm.attrs;
+        console.log(formRes);
+
+        // 发起请求添加商品
+        // 商品的名称，必须是唯一的
+        const { data: res } = await this.$axios.post("goods", formRes);
+        if (res.meta.status !== 201) {
+          return this.$message.error("添加商品失败！");
+        }
+        this.$message.success("添加商品成功！");
+        this.$router.push("/goods");
+      });
+    }
   },
   computed: {
     cateId() {

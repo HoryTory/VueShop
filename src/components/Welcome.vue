@@ -1,7 +1,7 @@
 <template>
   <div class="mainContainer">
     <p>电商管理后台欢迎您！</p>
-    <el-carousel :interval="5000" arrow="always">
+    <el-carousel :interval="3000" arrow="always">
       <el-carousel-item v-for="(item, index) in pics" :key="index">
         <img :src="item.picUrl" class="image" />
       </el-carousel-item>
