@@ -49,20 +49,43 @@ export default {
       }
     };
   },
-  async mounted() {
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById("main"));
-
-    const { data: res } = await this.$axios.get("reports/type/1");
-    if (res.meta.status !== 200) {
-      return this.$message.error("获取折线图数据失败！");
-    }
-
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(result);
+  mounted() {
+    this.loadChart();
   },
   components: {
     Bread
+  },
+  methods: {
+    async loadChart() {
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById("main"));
+
+      const { data: res } = await this.$axios.get("reports/type/1");
+      if (res.meta.status !== 200) {
+        return this.$message.error("获取折线图数据失败！");
+      }
+
+      const result = this.merge(res.data, this.options);
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(result);
+    },
+    isObj(val) {
+      const type = typeof val;
+      return val !== null && (type === "object" || type === "function");
+    },
+    merge(source, other) {
+      if (!this.isObj(source) || !this.isObj(other)) {
+        return other === undefined ? source : other;
+      }
+      return Object.keys({ ...source, ...other }).reduce(
+        (acc, key) => {
+          acc[key] = this.merge(source[key], other[key]);
+          return acc;
+        },
+        Array.isArray(source) ? [] : {}
+      );
+    }
   }
 };
 </script>

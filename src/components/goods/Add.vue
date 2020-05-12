@@ -251,7 +251,7 @@ export default {
         }
         console.log(this.addForm);
 
-        // 需要深拷贝，不然会与级联选择冲突
+        // 需要深拷贝，不然会与级联选择冲突(此处最好用lodash的深拷贝方法)
         const form = JSON.stringify(this.addForm);
         const formRes = JSON.parse(form);
         formRes.goods_cat = formRes.goods_cat.join(",");
